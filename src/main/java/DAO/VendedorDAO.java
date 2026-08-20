@@ -5,7 +5,9 @@ import model.Vendedor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 //implements eh pro interface
@@ -28,8 +30,37 @@ public class VendedorDAO implements GenericDao<Vendedor, Integer> {
         }
     }
 
+
     @Override
     public List<Vendedor> listar() {
-        return List.of();
+
+        List<Vendedor> lista = new ArrayList<>();
+
+        String sql = "select * from java_vendedor";
+
+
+        try(Connection connection = ConnectionFactory.obterConexao();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()) {
+
+
+            while (rs.next()){
+
+                Vendedor vendedor = new Vendedor();
+                vendedor.setId(rs.getInt("id"));
+                vendedor.setNome(rs.getString("nome"));
+
+                lista.add(vendedor);
+
+            }//while
+
+        }
+        catch (SQLException e){
+
+
+
+        }//try catch
+
+        return lista;
     }
 }
